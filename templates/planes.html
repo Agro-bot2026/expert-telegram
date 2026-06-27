@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planes y Precios — ExpertIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+<style>
+:root { --cyan:#00f2ff; --green:#00ff9d; --bg:#030608; --bg2:#080d10; --card:rgba(0,242,255,0.04); --border:rgba(0,242,255,0.15); --text:#e0f0f5; --muted:#5a7a85; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Syne',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+#bg-canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+.container { position:relative; z-index:1; max-width:1000px; margin:0 auto; padding:80px 20px; }
+.header { text-align:center; margin-bottom:60px; }
+.back-btn { display:inline-flex; align-items:center; gap:8px; color:var(--muted); text-decoration:none; font-family:'Space Mono',monospace; font-size:0.8rem; margin-bottom:32px; transition:color 0.2s; }
+.back-btn:hover { color:var(--cyan); }
+.title { font-size:clamp(2rem,5vw,3.5rem); font-weight:800; margin-bottom:16px; }
+.subtitle { color:var(--muted); font-size:1.1rem; max-width:600px; margin:0 auto; }
+.planes-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:30px; margin-top:50px; }
+.plan-card { background:rgba(8,13,16,0.6); backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:32px; padding:48px 40px; position:relative; transition:all 0.3s; display:flex; flex-direction:column; }
+.plan-card:hover { transform:translateY(-8px); border-color:rgba(0,242,255,0.4); box-shadow:0 20px 40px rgba(0,0,0,0.4); }
+.plan-card.featured { border-color:var(--cyan); background:rgba(0,242,255,0.03); }
+.featured-badge { position:absolute; top:-16px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg, var(--cyan), var(--green)); color:#000; font-weight:700; font-size:0.75rem; padding:6px 20px; border-radius:100px; white-space:nowrap; font-family:'Space Mono',monospace; }
+.plan-name { font-family:'Space Mono',monospace; font-size:0.9rem; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:16px; }
+.plan-price { margin-bottom:32px; }
+.price-val { font-size:3.5rem; font-weight:800; color:var(--cyan); font-family:'Space Mono',monospace; line-height:1; }
+.price-period { font-size:1rem; color:var(--muted); }
+.plan-features { list-style:none; margin-bottom:40px; flex-grow:1; }
+.plan-features li { display:flex; align-items:center; gap:12px; margin-bottom:16px; font-size:1rem; }
+.plan-features li i { color:var(--green); font-size:1.1rem; }
+.btn-plan { width:100%; padding:16px; border-radius:16px; font-weight:700; font-family:'Syne',sans-serif; text-decoration:none; text-align:center; transition:all 0.3s; font-size:1rem; border:none; cursor:pointer; display:block; }
+.btn-plan.primary { background:linear-gradient(135deg, var(--cyan), var(--green)); color:#000; }
+.btn-plan.primary:hover { box-shadow:0 8px 30px rgba(0,242,255,0.3); }
+.btn-plan.ghost { background:transparent; border:1px solid var(--border); color:var(--text); }
+.btn-plan.ghost:hover { border-color:var(--cyan); color:var(--cyan); }
+.faq-section { margin-top:100px; text-align:center; }
+.faq-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; text-align:left; margin-top:60px; }
+@media(max-width:768px){ .faq-grid { grid-template-columns:1fr; } }
+.faq-item h4 { font-size:1.1rem; margin-bottom:12px; color:var(--cyan); }
+.faq-item p { color:var(--muted); font-size:0.95rem; line-height:1.6; }
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5W19ML4HVY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-5W19ML4HVY');
+</script>
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4478373683231277" crossorigin="anonymous"></script>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div class="container">
+  <header class="header">
+    <a href="{% if user %}/dashboard{% else %}/{% endif %}" class="back-btn">
+      <i class="bi bi-arrow-left"></i> {% if user %}Volver al Dashboard{% else %}Volver al inicio{% endif %}
+    </a>
+    <h1 class="title">Elegí tu plan</h1>
+    <p class="subtitle">Todo gratis, para siempre. Empezá a potenciar tu profesión hoy mismo.</p>
+  </header>
+
+
+    <div class="plan-card featured">
+      <div class="featured-badge">100% GRATIS</div>
+      <div class="plan-name">Acceso Total</div>
+      <div class="plan-price">
+        <span class="price-val">$0</span>
+        <span class="price-period"> / siempre</span>
+      </div>
+      <ul class="plan-features">
+        <li><i class="bi bi-check-circle-fill"></i> PDFs ilimitados</li>
+        <li><i class="bi bi-check-circle-fill"></i> Preguntas ilimitadas</li>
+        <li><i class="bi bi-check-circle-fill"></i> IA especializada</li>
+        <li><i class="bi bi-check-circle-fill"></i> Soporte WhatsApp 24/7</li>
+        <li><i class="bi bi-check-circle-fill"></i> Acceso anticipado a funciones</li>
+      </ul>
+      {% if user and user.plan == 'pro' %}
+      <button class="btn-plan ghost" disabled>Plan Actual ✓</button>
+      {% else %}
+      <a href="/register" class="btn-plan primary">
+        <i class="bi bi-rocket-takeoff"></i> Empezar gratis
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <section class="faq-section">
+    <h2 style="font-size:1.8rem; margin-bottom:10px;">Preguntas Frecuentes</h2>
+    <p style="color:var(--muted);">Todo lo que necesitás saber sobre ExpertIA</p>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h4>¿Tiene algún costo?</h4>
+        <p>No, ExpertIA es completamente gratis. Todas las funciones están disponibles sin costo alguno.</p>
+      </div>
+      <div class="faq-item">
+        <h4>¿Hay límite de preguntas?</h4>
+        <p>No, podés hacer preguntas ilimitadas y subir todos los PDFs que quieras, sin restricciones.</p>
+      </div>
+      <div class="faq-item">
+        <h4>¿Mis documentos están seguros?</h4>
+        <p>Totalmente. Tus archivos se encriptan y solo tu cuenta tiene acceso a ellos para entrenar a la IA.</p>
+      </div>
+      <div class="faq-item">
+        <h4>¿Cómo funciona el soporte WhatsApp?</h4>
+        <p>Tenés un link directo a nuestro equipo técnico por WhatsApp para resolver dudas en minutos.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+for(let i=0;i<50;i++) particles.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.2,vy:(Math.random()-0.5)*0.2,r:Math.random()*1.5+0.5});
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  for(let p of particles) {
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0||p.x>W) p.vx*=-1; if(p.y<0||p.y>H) p.vy*=-1;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,242,255,0.2)'; ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>

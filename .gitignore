@@ -1,0 +1,27 @@
+# === SECRETOS - NUNCA SUBIR ===
+.env
+.env.*
+*.env
+llave.json
+*.json.key
+*.pem
+
+# === Base de datos (datos de clientes y pagos) ===
+*.db
+*.sqlite
+*.sqlite3
+
+# === Datos privados de usuarios ===
+uploads/
+
+# === Backups (contienen .env y bases viejas) ===
+backups/
+
+# === Pesado y regenerable ===
+venv
+chroma_db/
+__pycache__/
+*.pyc
+
+# === Logs ===
+*.log

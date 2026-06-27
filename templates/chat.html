@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat — ExpertIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5W19ML4HVY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-5W19ML4HVY');
+</script>
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4478373683231277" crossorigin="anonymous"></script>
+<style>
+:root {
+  --cyan: #00f2ff;
+  --green: #00ff9d;
+  --bg: #030608;
+  --bg2: #080d10;
+  --card: rgba(0,242,255,0.04);
+  --border: rgba(0,242,255,0.15);
+  --text: #e0f0f5;
+  --muted: #5a7a85;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* HEADER */
+.chat-header {
+  padding: 12px 16px;
+  background: rgba(8,13,16,0.8);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+.header-brand { color: var(--cyan); font-weight: 800; text-decoration: none; font-size: 1rem; }
+.header-actions { display: flex; gap: 8px; }
+.header-btn {
+  color: var(--muted); text-decoration: none; font-size: 0.78rem;
+  padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px;
+  background: transparent; cursor: pointer; transition: all 0.2s;
+}
+.header-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+/* DOCS BAR */
+.docs-bar {
+  padding: 8px 16px;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+.doc-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(0,242,255,0.06); border: 1px solid var(--border);
+  border-radius: 100px; padding: 3px 10px; white-space: nowrap;
+  font-size: 0.72rem; color: var(--cyan);
+}
+
+/* MESSAGES */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.msg-wrap { display: flex; flex-direction: column; max-width: 85%; }
+.msg-wrap.user { align-self: flex-end; }
+.msg-wrap.bot { align-self: flex-start; }
+.bubble {
+  padding: 14px 18px;
+  border-radius: 18px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.bubble.user {
+  background: rgba(0,242,255,0.1);
+  border: 1px solid rgba(0,242,255,0.2);
+  border-bottom-right-radius: 4px;
+}
+.bubble.bot {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+.source-tag {
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  display: flex; align-items: center; gap: 6px;
+}
+.action-btns { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.audio-btn {
+  background: none; border: 1px solid var(--border); border-radius: 8px;
+  color: var(--cyan); padding: 5px 12px; font-size: 0.75rem; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s;
+  font-family: 'Space Mono', monospace;
+}
+.audio-btn:hover { border-color: var(--cyan); }
+.podcast-btn {
+  background: rgba(0,255,157,0.06); border: 1px solid rgba(0,255,157,0.2);
+  border-radius: 8px; color: var(--green); padding: 5px 12px; font-size: 0.75rem;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
+  transition: all 0.2s; font-family: 'Space Mono', monospace;
+}
+.podcast-btn:hover { background: rgba(0,255,157,0.15); }
+
+/* TYPING */
+.typing-indicator {
+  display: flex; gap: 5px; align-items: center;
+  padding: 14px 18px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 18px;
+  border-bottom-left-radius: 4px; align-self: flex-start;
+}
+.typing-dot {
+  width: 6px; height: 6px; background: var(--muted);
+  border-radius: 50%; animation: typeBounce 1.2s infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typeBounce {
+  0%,60%,100% { transform: translateY(0); }
+  30% { transform: translateY(-6px); }
+}
+
+/* INPUT */
+.chat-input-area {
+  padding: 12px 16px 28px;
+  border-top: 1px solid var(--border);
+  background: rgba(3,6,8,0.8);
+  flex-shrink: 0;
+}
+.input-box {
+  display: flex; align-items: flex-end; gap: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 8px;
+  transition: border-color 0.2s;
+}
+.input-box:focus-within { border-color: var(--cyan); }
+#chatInput {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--text); font-family: 'Syne', sans-serif;
+  font-size: 0.95rem; resize: none; max-height: 120px; padding: 6px 4px;
+  line-height: 1.5;
+}
+#chatInput::placeholder { color: var(--muted); }
+.send-btn {
+  width: 42px; height: 42px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--cyan), var(--green));
+  border: none; border-radius: 10px; color: #000;
+  font-size: 1.1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s;
+}
+.send-btn:active { transform: scale(0.95); }
+.mic-btn {
+  width: 42px; height: 42px; flex-shrink: 0;
+  background: rgba(0,242,255,0.06); border: 1px solid var(--border);
+  border-radius: 10px; color: var(--cyan); font-size: 1.1rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.mic-btn.recording { background: rgba(255,71,87,0.2); border-color: rgba(255,71,87,0.4); color: #ff4757; }
+.input-note { text-align: center; font-size: 0.7rem; color: var(--muted); margin-top: 8px; }
+
+/* PODCAST MODAL */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85); z-index: 9999;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: #080d10; border: 1px solid rgba(0,242,255,0.3);
+  border-radius: 20px; padding: 28px; width: 100%; max-width: 500px;
+}
+.modal-title {
+  font-size: 1.1rem; font-weight: 800; color: var(--cyan);
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 6px;
+}
+.modal-sub { color: var(--muted); font-size: 0.82rem; margin-bottom: 20px; }
+.estilos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.estilo-card {
+  background: rgba(0,242,255,0.03); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px; cursor: pointer; text-align: left;
+  transition: all 0.2s; color: var(--text);
+}
+.estilo-card:hover, .estilo-card.selected { border-color: var(--cyan); background: rgba(0,242,255,0.08); }
+.estilo-nombre { font-weight: 700; font-size: 0.82rem; }
+.estilo-desc { font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
+.generate-btn {
+  width: 100%; background: linear-gradient(135deg, var(--cyan), var(--green));
+  color: #000; font-weight: 700; padding: 13px; border-radius: 10px;
+  border: none; cursor: pointer; font-size: 0.95rem; font-family: 'Syne', sans-serif;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.close-btn { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* MOBILE */
+@media(max-width: 480px) {
+  .chat-messages { padding: 14px 12px; }
+  .chat-input-area { padding: 10px 12px 20px; }
+  .bubble { font-size: 0.88rem; padding: 12px 14px; }
+  .estilos-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="chat-header">
+  <a href="/dashboard" class="header-brand">⚡ ExpertIA</a>
+  <div class="header-actions">
+    <a href="/planes" class="header-btn"><i class="bi bi-star"></i> Pro</a>
+    <button class="header-btn" onclick="clearChat()"><i class="bi bi-trash"></i></button>
+    <a href="/dashboard" class="header-btn"><i class="bi bi-file-earmark-pdf"></i></a>
+    <a href="/logout" class="header-btn" style="color:#ff4d4d;border-color:rgba(255,77,77,0.3);">
+      <i class="bi bi-box-arrow-right"></i>
+    </a>
+  </div>
+</header>
+
+<!-- DOCS BAR -->
+{% if docs %}
+<div class="docs-bar">
+  <i class="bi bi-files" style="color:var(--cyan);"></i>
+  {% for doc in docs %}
+  <span class="doc-chip"><i class="bi bi-file-earmark-text"></i> {{ doc.filename }}</span>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- MESSAGES -->
+<div class="chat-messages" id="chatMessages">
+  {% if not docs %}
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--muted);padding:40px;">
+    <i class="bi bi-file-earmark-plus" style="font-size:2.5rem;margin-bottom:16px;"></i>
+    <p style="font-weight:700;margin-bottom:8px;">Sin documentos</p>
+    <p style="font-size:0.85rem;margin-bottom:20px;">Subí un PDF para empezar</p>
+    <a href="/dashboard" style="background:linear-gradient(135deg,var(--cyan),var(--green));color:#000;font-weight:700;padding:12px 24px;border-radius:10px;text-decoration:none;">
+      <i class="bi bi-upload"></i> Subir PDF
+    </a>
+  </div>
+  {% else %}
+  <div class="msg-wrap bot" id="welcomeMsg">
+    <div class="bubble bot">
+      ¡Hola {{ user.nombre or 'usuario' }}! Tengo acceso a tus documentos y estoy listo. ¿En qué puedo ayudarte?
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- INPUT -->
+<div class="chat-input-area">
+  <div class="input-box">
+    <button class="mic-btn" id="micBtn" type="button">
+      <i class="bi bi-mic"></i>
+    </button>
+    <textarea id="chatInput" placeholder="Escribí tu pregunta..." rows="1"></textarea>
+    <button class="send-btn" id="sendBtn" type="button">
+      <i class="bi bi-send-fill"></i>
+    </button>
+  </div>
+  <p class="input-note">Respuestas basadas exclusivamente en tus documentos</p>
+</div>
+
+<!-- PODCAST MODAL -->
+<div class="modal-overlay" id="podcastModal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <span><i class="bi bi-mic-fill"></i> Modo Podcast</span>
+      <button class="close-btn" onclick="closePodcast()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <p class="modal-sub">Elegí el estilo — los locutores relatarán el contenido</p>
+    <div class="estilos-grid" id="estilosGrid">
+      <div style="color:var(--muted);font-size:0.82rem;grid-column:span 2;text-align:center;">Cargando...</div>
+    </div>
+    <button class="generate-btn" id="genPodcastBtn" onclick="generarPodcast()" disabled>
+      <i class="bi bi-play-circle-fill"></i> Generar Podcast
+    </button>
+  </div>
+</div>
+
+<script>
+// ── ELEMENTOS ──
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
+const micBtn = document.getElementById('micBtn');
+
+// ── AUTO-RESIZE TEXTAREA ──
+chatInput.addEventListener('input', () => {
+  chatInput.style.height = 'auto';
+  chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+});
+
+// ── ENVIAR MENSAJE ──
+function sendMessage() {
+  const msg = chatInput.value.trim();
+  if (!msg) return;
+
+  addMsg('user', msg);
+  chatInput.value = '';
+  chatInput.style.height = 'auto';
+  sendBtn.disabled = true;
+  showTyping();
+
+  const fd = new FormData();
+  fd.append('message', msg);
+
+  fetch('/chat/message', {
+    method: 'POST',
+    body: fd,
+    credentials: 'include'
+  })
+  .then(r => r.json())
+  .then(data => {
+    hideTyping();
+    if (data.error) {
+      addMsg('bot', '❌ ' + data.error);
+    } else {
+      addMsg('bot', data.answer, data.sources || []);
+    }
+  })
+  .catch(() => {
+    hideTyping();
+    addMsg('bot', '❌ Error de conexión. Intentá de nuevo.');
+  })
+  .finally(() => {
+    sendBtn.disabled = false;
+  });
+}
+
+// ── EVENTOS BOTÓN ENVIAR ──
+sendBtn.addEventListener('click', sendMessage);
+sendBtn.addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  sendMessage();
+}, { passive: false });
+
+chatInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+// ── AGREGAR MENSAJE ──
+function addMsg(role, content, sources=[]) {
+  document.getElementById('welcomeMsg')?.remove();
+
+  const wrap = document.createElement('div');
+  wrap.className = `msg-wrap ${role}`;
+
+  const bubble = document.createElement('div');
+  bubble.className = `bubble ${role}`;
+  bubble.textContent = content;
+
+  if (role === 'bot' && sources.length > 0) {
+    const src = document.createElement('div');
+    src.className = 'source-tag';
+    src.innerHTML = `<i class="bi bi-file-earmark-check"></i> ${sources.join(', ')}`;
+    bubble.appendChild(src);
+
+    const btns = document.createElement('div');
+    btns.className = 'action-btns';
+
+    const audioBtn = document.createElement('button');
+    audioBtn.className = 'audio-btn';
+    audioBtn.innerHTML = '<i class="bi bi-volume-up"></i> Escuchar';
+    audioBtn.onclick = async () => {
+      audioBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Generando...';
+      audioBtn.disabled = true;
+      try {
+        const res = await fetch('/api/tts', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({texto: content}),
+          credentials: 'include'
+        });
+        const data = await res.json();
+        if (data.audio) {
+          const el = document.createElement('audio');
+          el.controls = true;
+          el.style.cssText = 'width:100%;margin-top:10px;border-radius:8px;';
+          el.src = 'data:audio/wav;base64,' + data.audio;
+          bubble.appendChild(el);
+          el.play();
+          audioBtn.remove();
+        } else {
+          audioBtn.innerHTML = '<i class="bi bi-volume-up"></i> Escuchar';
+          audioBtn.disabled = false;
+        }
+      } catch {
+        audioBtn.innerHTML = '<i class="bi bi-volume-up"></i> Escuchar';
+        audioBtn.disabled = false;
+      }
+    };
+
+    const podBtn = document.createElement('button');
+    podBtn.className = 'podcast-btn';
+    podBtn.innerHTML = '<i class="bi bi-mic-fill"></i> Podcast';
+    podBtn.onclick = () => openPodcast(content);
+
+    btns.appendChild(audioBtn);
+    btns.appendChild(podBtn);
+    bubble.appendChild(btns);
+  }
+
+  wrap.appendChild(bubble);
+  chatMessages.appendChild(wrap);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTyping() {
+  const el = document.createElement('div');
+  el.id = 'typingEl';
+  el.className = 'typing-indicator';
+  el.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  chatMessages.appendChild(el);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function hideTyping() {
+  document.getElementById('typingEl')?.remove();
+}
+
+function clearChat() {
+  chatMessages.innerHTML = '<div class="msg-wrap bot" id="welcomeMsg"><div class="bubble bot">Chat limpiado. ¿En qué puedo ayudarte?</div></div>';
+}
+
+// ── MICRÓFONO ──
+micBtn.addEventListener('click', () => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert('Tu navegador no soporta el micrófono'); return; }
+  const r = new SR();
+  r.lang = 'es-ES';
+  r.onstart = () => { micBtn.classList.add('recording'); micBtn.innerHTML = '<i class="bi bi-stop-circle"></i>'; };
+  r.onresult = e => {
+    let t = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) t += e.results[i][0].transcript;
+    chatInput.value = t;
+    setTimeout(sendMessage, 500);
+  };
+  r.onend = () => { micBtn.classList.remove('recording'); micBtn.innerHTML = '<i class="bi bi-mic"></i>'; };
+  r.start();
+});
+
+// ── PODCAST ──
+let podcastContent = '';
+let selectedEstilo = 'cafe';
+let estilosLoaded = false;
+
+async function openPodcast(content) {
+  podcastContent = content;
+  document.getElementById('podcastModal').classList.add('open');
+  if (!estilosLoaded) {
+    try {
+      const res = await fetch('/api/podcast/estilos', {credentials: 'include'});
+      const data = await res.json();
+      const grid = document.getElementById('estilosGrid');
+      grid.innerHTML = '';
+      data.estilos.forEach(e => {
+        const btn = document.createElement('button');
+        btn.className = 'estilo-card' + (e.id === 'cafe' ? ' selected' : '');
+        btn.innerHTML = `<div class="estilo-nombre">${e.nombre}</div><div class="estilo-desc">${e.descripcion}</div>`;
+        btn.onclick = () => {
+          document.querySelectorAll('.estilo-card').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedEstilo = e.id;
+        };
+        grid.appendChild(btn);
+      });
+      document.getElementById('genPodcastBtn').disabled = false;
+      estilosLoaded = true;
+    } catch {
+      document.getElementById('estilosGrid').innerHTML = '<div style="color:#ff4757;grid-column:span 2;">Error cargando estilos</div>';
+    }
+  }
+}
+
+function closePodcast() {
+  document.getElementById('podcastModal').classList.remove('open');
+}
+
+async function generarPodcast() {
+  const btn = document.getElementById('genPodcastBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Iniciando...';
+  closePodcast();
+
+  const indicator = document.createElement('div');
+  indicator.id = 'podcastIndicator';
+  indicator.className = 'msg-wrap bot';
+  indicator.innerHTML = `<div class="bubble bot" style="display:flex;align-items:center;gap:10px;">
+    <i class="bi bi-mic-fill" style="color:var(--green);font-size:1.1rem;"></i>
+    <div>
+      <div style="font-weight:700;">🎙️ Generando podcast...</div>
+      <div id="podMsg" style="color:var(--muted);font-size:0.8rem;">Escribiendo el guión...</div>
+    </div>
+  </div>`;
+  chatMessages.appendChild(indicator);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  try {
+    const res = await fetch('/api/podcast', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({respuesta: podcastContent, estilo: selectedEstilo}),
+      credentials: 'include'
+    });
+    const data = await res.json();
+
+    if (!data.job_id) {
+      document.getElementById('podcastIndicator')?.remove();
+      alert('Error: ' + (data.error || 'No se pudo iniciar'));
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> Generar Podcast';
+      return;
+    }
+
+    const msgs = ['Escribiendo el guión...', 'Los locutores están grabando...', 'Mezclando las voces...', 'Casi listo...'];
+    let mi = 0;
+    const iv = setInterval(() => {
+      mi = (mi + 1) % msgs.length;
+      const el = document.getElementById('podMsg');
+      if (el) el.textContent = msgs[mi];
+    }, 4000);
+
+    const poll = async () => {
+      try {
+        const sr = await fetch('/api/podcast/status/' + data.job_id, {credentials: 'include'});
+        const sd = await sr.json();
+
+        if (sd.status === 'done' && sd.audio) {
+          clearInterval(iv);
+          document.getElementById('podcastIndicator')?.remove();
+          const bubbles = document.querySelectorAll('.bubble.bot');
+          const last = bubbles[bubbles.length - 1];
+          if (last) {
+            const lbl = document.createElement('div');
+            lbl.style.cssText = 'font-size:0.75rem;color:var(--green);margin-top:10px;';
+            lbl.innerHTML = '<i class="bi bi-mic-fill"></i> Podcast listo';
+            last.appendChild(lbl);
+            const audio = document.createElement('audio');
+            audio.controls = true;
+            audio.style.cssText = 'width:100%;margin-top:6px;border-radius:8px;';
+            audio.src = 'data:audio/wav;base64,' + sd.audio;
+            last.appendChild(audio);
+            audio.play();
+          }
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> Generar Podcast';
+        } else if (sd.status === 'error') {
+          clearInterval(iv);
+          document.getElementById('podcastIndicator')?.remove();
+          alert('Error: ' + (sd.error || 'Error desconocido'));
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> Generar Podcast';
+        } else {
+          setTimeout(poll, 5000);
+        }
+      } catch {
+        clearInterval(iv);
+        document.getElementById('podcastIndicator')?.remove();
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> Generar Podcast';
+      }
+    };
+
+    setTimeout(poll, 5000);
+
+  } catch {
+    document.getElementById('podcastIndicator')?.remove();
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> Generar Podcast';
+  }
+}
+</script>
+</body>
+</html>

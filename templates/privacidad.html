@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacidad y Términos — ExpertIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+<style>
+:root { --cyan:#00f2ff; --green:#00ff9d; --bg:#030608; --bg2:#080d10; --card:rgba(0,242,255,0.04); --border:rgba(0,242,255,0.15); --text:#e0f0f5; --muted:#5a7a85; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Syne',sans-serif; background:var(--bg); color:var(--text); line-height:1.7; }
+#bg-canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+.container { position:relative; z-index:1; max-width:800px; margin:0 auto; padding:80px 20px; }
+.back-link { display:inline-flex; align-items:center; gap:8px; color:var(--cyan); text-decoration:none; font-family:'Space Mono',monospace; font-size:0.8rem; margin-bottom:40px; transition:color 0.2s; }
+.back-link:hover { color:var(--green); }
+.content-box { background:rgba(8,13,16,0.6); backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:24px; padding:60px; }
+@media(max-width:600px){ .content-box { padding:30px; } }
+h1 { font-size:2.5rem; font-weight:800; margin-bottom:40px; line-height:1.1; }
+h2 { font-size:1.5rem; color:var(--cyan); margin:40px 0 20px; font-family:'Space Mono',monospace; }
+p { color:var(--muted); margin-bottom:20px; font-size:1.05rem; }
+ul { list-style:none; margin-bottom:20px; }
+ul li { position:relative; padding-left:24px; margin-bottom:12px; color:var(--muted); }
+ul li::before { content:'>'; position:absolute; left:0; color:var(--green); font-family:'Space Mono',monospace; }
+.last-update { font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; display:block; }
+footer { text-align:center; margin-top:60px; padding-bottom:40px; color:var(--muted); font-size:0.85rem; }
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5W19ML4HVY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-5W19ML4HVY');
+</script>
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4478373683231277" crossorigin="anonymous"></script>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div class="container">
+  <a href="/" class="back-link"><i class="bi bi-arrow-left"></i> Volver al inicio</a>
+  <article class="content-box">
+    <span class="last-update">Última actualización: 19 de mayo, 2026</span>
+    <h1>Política de Privacidad y Términos</h1>
+    <p>En ExpertIA, la privacidad de tus datos y documentos es nuestra prioridad absoluta. Esta página detalla cómo manejamos tu información y las reglas de uso de nuestra plataforma.</p>
+
+    <h2>1. Tus Documentos</h2>
+    <p>Cuando subís un PDF a ExpertIA, sucede lo siguiente:</p>
+    <ul>
+      <li>El archivo se procesa para que nuestra IA pueda "leerlo".</li>
+      <li>Tus documentos son privados y solo accesibles desde tu cuenta.</li>
+      <li>No utilizamos tus documentos para entrenar modelos globales de IA.</li>
+      <li>Podés eliminar tus archivos en cualquier momento desde el dashboard.</li>
+    </ul>
+
+    <h2>2. Seguridad de Datos</h2>
+    <p>Implementamos medidas de seguridad para proteger tu información:</p>
+    <ul>
+      <li>Encriptación SSL en todas las comunicaciones.</li>
+      <li>Almacenamiento seguro de archivos en servidores privados.</li>
+      <li>Autenticación de usuarios con contraseñas encriptadas.</li>
+    </ul>
+
+    <h2>3. Uso de la IA</h2>
+    <p>ExpertIA utiliza modelos avanzados de procesamiento de lenguaje natural. Es importante entender que:</p>
+    <ul>
+      <li>La IA intenta responder basándose exclusivamente en tus documentos.</li>
+      <li>El usuario es responsable de verificar la información crítica.</li>
+      <li>No nos hacemos responsables por decisiones tomadas basadas en las respuestas de la IA.</li>
+    </ul>
+
+    <h2>4. Servicio Gratuito</h2>
+    <p>ExpertIA es un servicio completamente gratuito. Todas las funciones están disponibles sin costo y sin necesidad de realizar pagos.</p>
+
+    <h2>5. Eliminación de Cuenta</h2>
+    <p>Podés solicitar la eliminación completa de tu cuenta y todos tus datos en cualquier momento contactándonos vía WhatsApp. Procederemos a eliminar todos tus documentos, conversaciones y datos personales.</p>
+
+    <h2>6. Contacto</h2>
+    <p>Si tenés dudas sobre cómo manejamos tu privacidad, podés contactarnos directamente por WhatsApp al número indicado en la página principal.</p>
+  </article>
+  <footer>⚡ ExpertIA — Tu experto personal con tus documentos.</footer>
+</div>
+
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+for(let i=0;i<30;i++) particles.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.1,vy:(Math.random()-0.5)*0.1,r:Math.random()*1.5+0.5});
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  for(let p of particles) {
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0||p.x>W) p.vx*=-1; if(p.y<0||p.y>H) p.vy*=-1;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,242,255,0.15)'; ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>

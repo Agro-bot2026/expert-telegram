@@ -1,0 +1,14 @@
+python-telegram-bot==20.7
+google-cloud-texttospeech
+google-cloud-speech
+vertexai
+google-cloud-aiplatform
+pymupdf
+pytesseract
+pdf2image
+chromadb
+sentence-transformers
+aiohttp
+aiofiles
+python-dotenv
+Pillow
